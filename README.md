@@ -63,9 +63,12 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now omnia
 
 # 2. TUI (run on demand, e.g. inside a tmux session over SSH)
-pip install --user ./tui
-OMNIA_SOCKET_PATH=/run/omnia/omnia.sock omnia-tui
+python3 -m venv ~/omnia-tui-venv
+~/omnia-tui-venv/bin/pip install ./tui
+OMNIA_SOCKET_PATH=/run/omnia/omnia.sock ~/omnia-tui-venv/bin/omnia-tui
 ```
+
+A dedicated venv is used here instead of `pip install --user` because most current Debian/Ubuntu releases block system-wide `pip install` (PEP 668, "externally-managed-environment").
 
 For the "which key logged in" feature to work at all, `sshd_config` needs `LogLevel VERBOSE` (or at least `INFO`) so OpenSSH logs the key fingerprint on accepted/failed public-key logins.
 
