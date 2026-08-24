@@ -85,7 +85,11 @@ class OmniaServer:
         if socket_path.exists():
             socket_path.unlink()
         server = await asyncio.start_unix_server(self._handle_client, path=str(socket_path))
-        socket_path.chmod(0o600)
+        # rw for owner+group, nothing for others: the TUI runs as the human login
+        # user, not the "omnia" service account, so it needs group access to
+        # connect - see the README/deploy notes on adding that user to the
+        # "omnia" group. 0600 would lock everyone but the daemon itself out.
+        socket_path.chmod(0o660)
         return server
 
     async def _handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:

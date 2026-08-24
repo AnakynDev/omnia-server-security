@@ -63,12 +63,15 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now omnia
 
 # 2. TUI (run on demand, e.g. inside a tmux session over SSH)
+sudo usermod -aG omnia $USER   # lets your login user reach the daemon's socket; log out and back in after this
 python3 -m venv ~/omnia-tui-venv
 ~/omnia-tui-venv/bin/pip install ./tui
 OMNIA_SOCKET_PATH=/run/omnia/omnia.sock ~/omnia-tui-venv/bin/omnia-tui
 ```
 
 A dedicated venv is used here instead of `pip install --user` because most current Debian/Ubuntu releases block system-wide `pip install` (PEP 668, "externally-managed-environment").
+
+The `usermod -aG omnia` step only takes effect on your *next* login (or after running `newgrp omnia` in the current shell) - group membership is read when a session starts, not retroactively.
 
 For the "which key logged in" feature to work at all, `sshd_config` needs `LogLevel VERBOSE` (or at least `INFO`) so OpenSSH logs the key fingerprint on accepted/failed public-key logins.
 
