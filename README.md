@@ -41,6 +41,10 @@ Two independent processes, one project:
 ## Installation
 
 ```bash
+# 0. Get the code
+git clone https://github.com/AnakynDev/omnia-server-security.git
+cd omnia-server-security
+
 # 1. Daemon
 python3 -m venv /opt/omnia/venv
 /opt/omnia/venv/bin/pip install ./daemon
