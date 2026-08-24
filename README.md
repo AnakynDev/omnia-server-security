@@ -58,7 +58,7 @@ sudo cp deploy/config.example.toml /etc/omnia/config.toml
 # edit /etc/omnia/config.toml: authorized_keys_path (absolute path), SMTP settings, etc.
 
 sudo cp deploy/omnia.service /etc/systemd/system/
-# edit ExecStart in the unit file to point at /opt/omnia/venv/bin/python
+# the unit's ExecStart expects the venv at /opt/omnia/venv - edit it if you used a different path
 sudo systemctl daemon-reload
 sudo systemctl enable --now omnia
 

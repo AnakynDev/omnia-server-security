@@ -10,7 +10,7 @@ Group=omnia
 # without root, which is the primary path on any systemd/journald distro.
 SupplementaryGroups=adm systemd-journal
 
-ExecStart=/opt/omnia/omnia/bin/python -m omnia_daemon.main /etc/omnia/config.toml
+ExecStart=/opt/omnia/venv/bin/python -m omnia_daemon.main /etc/omnia/config.toml
 Restart=on-failure
 RestartSec=5
 
