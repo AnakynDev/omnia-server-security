@@ -160,12 +160,19 @@ class OmniaBackend:
         reader, writer = await asyncio.open_unix_connection(self.socket_path)
         self._writer = writer
         self.connection_state = "connected"
+        # _read_loop must be running *before* any _send_and_wait call: that's
+        # the only thing that ever reads a response off the socket and
+        # resolves the pending-request future. Awaiting _load_initial_state()
+        # first (as this used to) deadlocks forever - nothing reads the
+        # daemon's replies, so every request future just hangs.
+        read_task = asyncio.create_task(self._read_loop(reader))
         try:
             await self._send_and_wait("subscribe", {"streams": ["metrics", "login_event", "speedtest_result"]})
             await self._load_initial_state()
             self.ready = True
-            await self._read_loop(reader)
+            await read_task
         finally:
+            read_task.cancel()
             writer.close()
             self._writer = None
 
