@@ -46,8 +46,9 @@ git clone https://github.com/AnakynDev/omnia-server-security.git
 cd omnia-server-security
 
 # 1. Daemon
-python3 -m venv /opt/omnia/venv
-/opt/omnia/venv/bin/pip install ./daemon
+sudo mkdir -p /opt/omnia
+sudo python3 -m venv /opt/omnia/venv
+sudo /opt/omnia/venv/bin/pip install ./daemon
 
 sudo useradd --system --no-create-home omnia
 sudo usermod -aG adm,systemd-journal omnia   # read auth.log / the journal without root
