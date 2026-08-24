@@ -1,0 +1,31 @@
+# Virtual environments
+/omnia/
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime data (real config/db should never be committed)
+*.db
+*.sqlite3
+*.sock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code artifacts / planning docs - not part of the published project
+.claude/
+CLAUDE.md
+UI.md

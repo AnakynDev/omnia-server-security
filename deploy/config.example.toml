@@ -1,0 +1,70 @@
+# Configuração do daemon Omnia.
+# Copie para /etc/omnia/config.toml e ajuste os valores.
+# Qualquer campo omitido aqui usa o valor padrão embutido no código.
+
+[paths]
+socket_path = "/run/omnia/omnia.sock"
+db_path = "/var/lib/omnia/omnia.db"
+# Caminho ABSOLUTO do authorized_keys do usuário que efetivamente recebe os
+# logins SSH (não use "~" aqui: o serviço roda como o usuário "omnia", não
+# como o seu usuário de login, então "~" expandiria para o lugar errado).
+authorized_keys_path = "/home/SEU_USUARIO/.ssh/authorized_keys"
+# Só usado se o journald não estiver disponível (fallback).
+auth_log_path = "/var/log/auth.log"
+
+[ssh]
+# Nomes de unit do systemd tentados nessa ordem (Debian/Ubuntu usam
+# ssh.service; RHEL/CentOS/Fedora usam sshd.service).
+systemd_unit_candidates = ["ssh.service", "sshd.service"]
+use_journald = true
+
+[alerts]
+enabled = true
+failed_login_threshold = 5
+failed_login_window_minutes = 10
+disk_usage_percent_threshold = 90
+alert_on_new_key = true
+# Tempo mínimo entre dois emails para o MESMO alerta (mesmo IP, mesma chave,
+# mesmo disco) - evita spam de email numa tentativa de força bruta longa.
+cooldown_minutes = 30
+
+[smtp]
+enabled = false
+host = "smtp.example.com"
+port = 587
+use_tls = true
+username = ""
+password = ""
+from_addr = "omnia@example.com"
+to_addrs = ["voce@example.com"]
+
+[speedtest]
+enabled = true
+interval_hours = 6
+
+[retention]
+resource_snapshot_days = 30
+login_event_days = 90
+# De quanto em quanto tempo uma amostra é gravada no histórico (não é o
+# intervalo de coleta ao vivo, que é [metrics].poll_interval_seconds).
+resource_snapshot_interval_minutes = 5
+
+[metrics]
+poll_interval_seconds = 2.0
+
+[gpu]
+enabled = true
+# Se a leitura de GPU falhar (ex: sem permissão), só tenta de novo depois
+# desse tempo, para não gastar recursos tentando repetidamente.
+retry_minutes = 10
+
+[features]
+docker = true
+fail2ban = true
+smart_health = true
+pending_updates = true
+# Ações sensíveis - desligadas por padrão. Ligar exige também que o usuário
+# do serviço tenha permissão (sudoers/polkit) para rodar systemctl
+# restart/reboot, já que o daemon não deve rodar como root.
+allow_service_restart = false
+allow_reboot = false

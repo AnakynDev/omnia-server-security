@@ -1,0 +1,25 @@
+[Unit]
+Description=Omnia dashboard daemon (SSH security + system health monitoring)
+After=network.target
+
+[Service]
+Type=simple
+User=omnia
+Group=omnia
+# adm: read /var/log/auth.log (fallback path). systemd-journal: read the journal
+# without root, which is the primary path on any systemd/journald distro.
+SupplementaryGroups=adm systemd-journal
+
+ExecStart=/opt/omnia/omnia/bin/python -m omnia_daemon.main /etc/omnia/config.toml
+Restart=on-failure
+RestartSec=5
+
+# Creates /run/omnia (socket) and /var/lib/omnia (sqlite db) owned by the
+# service user, with the config paths in config.example.toml matching.
+RuntimeDirectory=omnia
+RuntimeDirectoryMode=0750
+StateDirectory=omnia
+StateDirectoryMode=0750
+
+[Install]
+WantedBy=multi-user.target

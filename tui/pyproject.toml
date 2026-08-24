@@ -1,0 +1,18 @@
+[project]
+name = "omnia-tui"
+version = "0.1.0"
+description = "Omnia dashboard TUI client - connects to the omnia-daemon local socket."
+requires-python = ">=3.11"
+dependencies = [
+    "textual>=8.0.0",
+]
+
+[project.scripts]
+omnia-tui = "omnia_tui.app:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["omnia_tui*"]
